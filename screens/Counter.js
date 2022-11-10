@@ -68,7 +68,7 @@ const startTime = useRef(0);
 const stopTime = useRef(0);
 const testTime = useRef(0);
 const token = useRef("");
-
+const userName = useRef();
 
 const savingSteps = async(event) =>{
 //how to get startime, stepPoints, StopTime, TestTime
@@ -89,15 +89,10 @@ stepPoints  = [];
 }); 
 stepPoints.length=30;
   try{
-    const tokenResponse = await fetch('https://dev.stedi.me/login',{
-  method: 'POST',
-  body:JSON.stringify({
-    userName: "rom19010@byui.edu",
-    password:"Patricia2596@"
-  })
-});
-
- token.current = await tokenResponse.text();
+    const sessionToken = await AsyncStorage.getItem('sessionToken');
+    const userName = await AsyncStorage.getItem('userName');
+    userName.current = userName;
+    token.current = sessionToken;
 console.log('token:' ,token.current);
 await fetch('https://dev.stedi.me/rapidsteptest',{
   method:'POST',
@@ -106,7 +101,7 @@ await fetch('https://dev.stedi.me/rapidsteptest',{
    'suresteps.session.token': token.current
   },
   body:JSON.stringify({
-customer:'rom19010@byui.edu',
+customer: userName.current,
 startTime: startTime.current,
 stepPoints,
 stopTime: stopTime.current,
@@ -125,7 +120,7 @@ totalSteps:30
 const getResults = async () =>{
 
 try{
-  const scoreResponse = await fetch('https://dev.stedi.me/riskscore/rom19010@byui.edu',{
+  const scoreResponse = await fetch('https://dev.stedi.me/riskscore/' + userName.current,{
   method:'GET',
   headers:{
     'Content-Type': 'application/json',

@@ -5,8 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import OnboardingScreen from './screens/OnboardingScreen';
 import Home from './screens/Home';
 import { NavigationContainer } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage'; // NEW LINE
-// ^backs up data onto ur device
+import AsyncStorage from '@react-native-async-storage/async-storage'; // ^backs up data onto ur device
 
 
 const AppStack = createNativeStackNavigator();
@@ -23,7 +22,6 @@ const App = () =>{
   const [phoneNumber, setPhoneNumber] = React.useState("");
   const [oneTimePassword, setOneTimePassword] = React.useState(null);
 
-// NEW LINES:
   useEffect(()=>{ //code that has to run before ur shown the app screen
     const getSessionToken = async()=>{
     const sessionToken = await AsyncStorage.getItem('sessionToken');
@@ -107,12 +105,12 @@ return(
               })
             });
             if(loginResponse.status==200){
-              const sessionToken = await loginResponse.text(); // NEW LINE
-              await AsyncStorage.setItem('sessionToken', sessionToken) // stores in storage
+              const sessionToken = await loginResponse.text(); 
+              await AsyncStorage.setItem('sessionToken', sessionToken) 
               setLoggedInState(loggedInStates.LOGGED_IN);
             } else{
-              console.log('response status', loginResponse.status); // NEW LINE
-              Alert.alert('Invalid', 'Invalid login information') // NEW LINE
+              console.log('response status', loginResponse.status); 
+              Alert.alert('Invalid', 'Invalid login information') 
               setLoggedInState(NOT_LOGGED_IN);
             }
         }}
