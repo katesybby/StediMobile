@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { TouchableOpacity, StyleSheet, Text, View, Image, SafeAreaView , Share, ScrollView, Button} from 'react-native';
 import { Card, CardTitle, CardContent} from 'react-native-material-cards';
 import BarChart from 'react-native-bar-chart';
-import {Camera,CameraType} from 'expo-camera'; 
+import {Camera, CameraType} from 'expo-camera'; 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // import Share from 'react-native-share';
 
@@ -24,8 +24,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const Profile = (props) => {
 
   const [userName, setUserName] = useState("");
-  const[profilePhoto,setProfilePhoto] = useState(null);
-  const[cameraReady, setCameraReady] = useState(false);
+  const [profilePhoto,setProfilePhoto] = useState(null);
+  const [cameraReady, setCameraReady] = useState(false);
   const cameraRef = useRef(null);
 
   useEffect(()=>{
@@ -60,8 +60,8 @@ if(profilePhoto==null){
   return (
     <View style={styles.container}>
     <Camera type={CameraType.front} style={styles.camera} ref={cameraRef} onCameraReady={()=>{setCameraReady(true)}}>
-      <View style={styles.container}>
-        {cameraReady?<TouchableOpacity style={style.button} onPress={async () => {
+      <View style={styles.buttonContainer}>
+        {cameraReady?<TouchableOpacity style={styles.button} onPress={async () => {
 
           const picture = await cameraRef.current.takePictureAsync(cameraOptions);
           console.log('Picture', picture);
@@ -88,8 +88,8 @@ shadowRadius: 2.62,
 elevation: 4}}>
      <CardContent>
      <Image style={{height: 100, width:100, borderRadius: 75}}
-      source={require('../image/me.jpg')} />
-    <Text style={{marginTop:10,marginBottom:10,fontWeight: 'bold'}}>Sarah Romero</Text>
+      source={{uri:profilePhoto}} />
+    <Text style={{marginTop:10,marginBottom:10,fontWeight: 'bold'}}>{userName}</Text>
 
     <Text style={{marginTop:20,marginBottom:2}}>This Week's progress</Text>
 {/* <BarChart barColor='green' data={data} horizontalData={horizontalData} /> */}

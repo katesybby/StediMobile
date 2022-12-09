@@ -10,6 +10,7 @@ import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage, button
 import exerciseImg from '../image/exercise2.png';
 import ProgressBar from 'react-native-progress/Bar';
 import { FontAwesome5 } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { Ionicons} from 'react-native-vector-icons';
 // import { Button } from 'react-native-elements';
 // import { IconButton } from 'react-native-paper';
@@ -70,6 +71,7 @@ const testTime = useRef(0);
 const token = useRef("");
 const userName = useRef();
 
+
 const savingSteps = async(event) =>{
 //how to get startime, stepPoints, StopTime, TestTime
 let stepPoints = [];
@@ -87,12 +89,11 @@ stepPoints  = [];
    previousTime = stepObject.time;
    stepPoints.push(stepTime);
 }); 
-stepPoints.length=30;
-  try{
-    const sessionToken = await AsyncStorage.getItem('sessionToken');
-    const userName = await AsyncStorage.getItem('userName');
-    userName.current = userName;
-    token.current = sessionToken;
+
+    try{
+
+  token.current = await AsyncStorage.getItem('sessionToken');
+  userName.current = await AsyncStorage.getItem('userName');
 console.log('token:' ,token.current);
 await fetch('https://dev.stedi.me/rapidsteptest',{
   method:'POST',
@@ -111,7 +112,7 @@ totalSteps:30
 })
   }
  catch(error){
-  console.log('error', error);
+  console.log('save error', error);
  }
 }
 
@@ -120,6 +121,8 @@ totalSteps:30
 const getResults = async () =>{
 
 try{
+  console.log('UserName:' +userName.current);
+  console.log('Token before calling score:'+token.current);
   const scoreResponse = await fetch('https://dev.stedi.me/riskscore/' + userName.current,{
   method:'GET',
   headers:{
@@ -128,11 +131,11 @@ try{
   }
 })
 const scoreObject = await scoreResponse.json();
-console.log("score:",scoreObject.score);
-setScore(scoreObject.score);
-props.setHomeTodayScore(scoreObject.score);
+console.log("score:",scoreObject.score); 
+setScore(scoreObject.score); 
+
 }catch(error){
-  console.log('error', error);
+  console.log('score error', error);
  }
 }
 
@@ -193,6 +196,7 @@ console.log('Error', error)
     y: 0,
     z: 0,
   });
+
   // const startTime = new Date().getTime();
   const [subscription, setSubscription] = useState(null);
   const recentAccelerationData = useRef([]);//useRef returns a mutable ref object whose .current property is initialized to the passed argument (initialValue). The returned object will persist for the full lifetime of the component.
